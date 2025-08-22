@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(0, 0%, 33.3%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 33.3%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 33.3%);
+  --primary: hsl(152, 100%, 32.9%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --primary-dark: hsl(152, 100%, 28.2%);
+  --secondary: hsl(152, 100%, 18.8%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(210, 11.1%, 94.1%);
+  --muted-foreground: hsl(0, 0%, 33.3%);
+  --accent: hsl(152, 60%, 92%);
+  --accent-foreground: hsl(152, 100%, 32.9%);
+  --destructive: hsl(356, 86.2%, 58.8%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 80%);
+  --input: hsl(200, 23.1%, 97.5%);
+  --ring: hsl(152, 100%, 32.9%);
+  --light-gray: hsl(210, 11.1%, 94.1%);
+  --medium-gray: hsl(0, 0%, 80%);
+  --text-color: hsl(0, 0%, 33.3%);
+  --error-color: hsl(356, 86.2%, 58.8%);
+  --success-color: hsl(142, 69.2%, 45.3%);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(200, 6.7%, 91.2%);
+  --card: hsl(228, 9.8%, 10%);
+  --card-foreground: hsl(0, 0%, 85.1%);
+  --popover: hsl(0, 0%, 0%);
+  --popover-foreground: hsl(200, 6.7%, 91.2%);
+  --primary: hsl(152, 100%, 32.9%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --primary-dark: hsl(152, 100%, 28.2%);
+  --secondary: hsl(195, 15.4%, 94.9%);
+  --secondary-foreground: hsl(210, 25%, 7.8%);
+  --muted: hsl(0, 0%, 9.4%);
+  --muted-foreground: hsl(210, 3.4%, 46.3%);
+  --accent: hsl(205.7, 70%, 7.8%);
+  --accent-foreground: hsl(152, 100%, 32.9%);
+  --destructive: hsl(356, 86.2%, 58.8%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(210, 5.3%, 14.9%);
+  --input: hsl(207.7, 27.7%, 18.4%);
+  --ring: hsl(152, 100%, 32.9%);
+  --light-gray: hsl(0, 0%, 9.4%);
+  --medium-gray: hsl(210, 5.3%, 14.9%);
+  --text-color: hsl(200, 6.7%, 91.2%);
+  --error-color: hsl(356, 86.2%, 58.8%);
+  --success-color: hsl(142, 69.2%, 45.3%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-light-gray text-text-color font-poppins min-h-screen antialiased;
+  }
+}
+
+@layer utilities {
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .bg-light-gray {
+    background-color: var(--light-gray);
+  }
+  
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  
+  .bg-primary-dark {
+    background-color: var(--primary-dark);
+  }
+  
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+  
+  .text-primary {
+    color: var(--primary);
+  }
+  
+  .text-primary-dark {
+    color: var(--primary-dark);
+  }
+  
+  .text-secondary {
+    color: var(--secondary);
+  }
+  
+  .text-text-color {
+    color: var(--text-color);
+  }
+  
+  .text-error-color {
+    color: var(--error-color);
+  }
+  
+  .text-success-color {
+    color: var(--success-color);
+  }
+  
+  .border-primary {
+    border-color: var(--primary);
+  }
+  
+  .border-medium-gray {
+    border-color: var(--medium-gray);
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .focus\:ring-primary:focus {
+    --tw-ring-color: var(--primary);
+  }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 2s infinite;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}

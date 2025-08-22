@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Consultor de Afiliados CCFC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="icon" href="https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #00a65a;
+      --primary-dark: #008f56;
+      --secondary-color: #005f3f;
+      --light-gray: #f0f2f5;
+      --medium-gray: #ccc;
+      --text-color: #555;
+      --white: #ffffff;
+      --error-color: #d9534f;
+      --font-family: 'Poppins', sans-serif;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .app-container {
+      background: var(--white);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header img {
+      max-width: 200px;
+    }
+    .header h2 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    #file-drop-area {
+      border: 3px dashed var(--medium-gray);
+      border-radius: 15px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #file-drop-area.drag-over {
+      border-color: var(--primary-color);
+      background-color: #e8f5e9;
+    }
+    #file-drop-area p {
+      margin: 5px 0 0 0;
+      font-weight: 500;
+      pointer-events: none;
+      text-align: center;
+    }
+    #file-drop-area .file-icon {
+      font-size: 40px;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      pointer-events: none;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    #file-info {
+        margin-top: 15px;
+        font-weight: 500;
+        color: var(--primary-dark);
+        text-align: center;
+    }
+    .search-section {
+      margin-top: 25px;
+      opacity: 0.5;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .search-section.enabled {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--medium-gray);
+      box-sizing: border-box;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px rgba(0, 166, 90, 0.2);
+    }
+    .input-group .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--medium-gray);
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: var(--white);
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    button:hover:not(:disabled) {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      background-color: var(--medium-gray);
+      cursor: not-allowed;
+    }
+    #descargarBtn {
+      margin-top: 15px;
+      background-color: var(--secondary-color);
+      display: none;
+    }
+    #descargarBtn:hover:not(:disabled) {
+      background-color: var(--primary-dark);
+    }
+    #resultado {
+      margin-top: 25px;
+    }
+    #cardExport {
+      background: linear-gradient(135deg, #e8f5e9, #ffffff);
+      padding: 25px;
+      border-radius: 15px;
+      border: 1px solid var(--primary-color);
+      animation: resultFadeIn 0.5s ease;
+    }
+    @keyframes resultFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .result-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .result-item:last-child { margin-bottom: 0; }
+    .result-item strong {
+      color: var(--primary-dark);
+      min-width: 150px;
+      font-weight: 600;
+    }
+    .notification {
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 500;
+      word-wrap: break-word;
+    }
+    .notification.success { background-color: #e8f5e9; color: var(--primary-dark); }
+    .notification.error { background-color: #fbe9e7; color: var(--error-color); }
+    .notification a { color: inherit; font-weight: 600; text-decoration: underline; }
+    #loader {
+      position: absolute;
+      z-index: 1000;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #loader.visible {
+        opacity: 1;
+        pointer-events: all;
+    }
+    .spinner {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      border: 5px solid #f3f3f3;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader p { margin-top: 15px; font-weight: 500; color: var(--primary-dark); }
+    footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 12px;
+      text-align: center;
+      color: #999;
+    }
+    footer span { color: var(--error-color); font-weight: 500; }
+    footer strong { color: #777; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div id="loader">
+      <div class="spinner"></div>
+      <p>Procesando...</p>
+    </div>
+
+    <header class="header">
+      <img src="https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png" alt="Logo Comfachocó EPS">
+      <h2>CONSULTOR DE AFILIADOS</h2>
+    </header>
+
+    <label id="file-drop-area" for="fileInput">
+      <div class="file-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      </div>
+      <p>Arrastra y suelta un archivo .xlsx aquí</p>
+      <p style="font-size: 14px; color: #999;">o haz clic para seleccionarlo</p>
+    </label>
+    <input type="file" id="fileInput" accept=".xlsx, .xls">
+    <div id="file-info"></div>
+
+    <div id="search-section" class="search-section">
+        <div class="input-group">
+            <input type="text" id="cedulaInput" placeholder="Digite la cédula del afiliado">
+            <span class="input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+        </div>
+        <button id="consultarBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Consultar Afiliado
+        </button>
+    </div>
+    
+    <div id="resultado"></div>
+    <button id="descargarBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Descargar Resultado
+    </button>
+    
+    <footer>
+        <span>¡Aplicativo de prueba! NO es para uso público.</span><br>
+        Creado por <strong>Kevin Hurtado</strong> | Versión 2.0
+    </footer>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let afiliados = [];
+        
+        const fileInput = document.getElementById("fileInput");
+        const fileDropArea = document.getElementById("file-drop-area");
+        const fileInfo = document.getElementById("file-info");
+        const cedulaInput = document.getElementById("cedulaInput");
+        const consultarBtn = document.getElementById("consultarBtn");
+        const resultadoDiv = document.getElementById("resultado");
+        const descargarBtn = document.getElementById("descargarBtn");
+        const loader = document.getElementById("loader");
+        const searchSection = document.getElementById("search-section");
+
+        function initialize() {
+            searchSection.classList.remove('enabled');
+            consultarBtn.disabled = true;
+        }
+
+        function toggleLoader(show) {
+            loader.classList.toggle('visible', show);
+        }
+
+        function showNotification(message, type = 'info') {
+            resultadoDiv.innerHTML = `<div class="notification ${type}">${message}</div>`;
+            descargarBtn.style.display = 'none';
+        }
+
+        function handleFile(file) {
+            if (!file) { return; }
+            toggleLoader(true);
+            fileInfo.textContent = '';
+            showNotification('', 'info');
+            initialize();
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: "array" });
+                    const sheetName = workbook.SheetNames[0];
+                    if (!sheetName) {
+                        throw new Error("El archivo Excel no contiene hojas.");
+                    }
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                    
+                    if (jsonData.length === 0) {
+                        throw new Error("La primera hoja del archivo está vacía o no tiene formato de tabla.");
+                    }
+                    
+                    afiliados = jsonData;
+                    fileInfo.textContent = `Archivo cargado: ${file.name}`;
+                    showNotification("✅ Archivo procesado. Ya puedes buscar afiliados.", 'success');
+                    searchSection.classList.add('enabled');
+                    consultarBtn.disabled = false;
+                    
+                } catch (err) {
+                    console.error("Error al procesar el archivo:", err);
+                    showNotification(`❌ Error al procesar: ${err.message}.`, 'error');
+                    initialize();
+                } finally {
+                    setTimeout(() => toggleLoader(false), 500);
+                }
+            };
+            
+            reader.onerror = (err) => {
+                 console.error("Error del lector de archivos:", err);
+                 showNotification(`❌ Hubo un error al intentar leer el archivo.`, 'error');
+                 toggleLoader(false);
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+        
+        function buscarAfiliado() {
+            const cedula = cedulaInput.value.trim();
+            resultadoDiv.innerHTML = "";
+            descargarBtn.style.display = "none";
+            if (!/^\d+$/.test(cedula)) {
+                showNotification("⚠️ Ingresa un número de cédula válido.", 'error');
+                return;
+            }
+            const afiliado = afiliados.find(a => {
+                const docKeys = ['doc', 'documento', 'cedula', 'Cédula', 'DOCUMENTO', 'NRO DOCUMENTO'];
+                for (const key of docKeys) {
+                    if (a[key] && String(a[key]).trim() === cedula) return true;
+                }
+                return false;
+            });
+            if (afiliado) {
+                const data = {
+                    doc: afiliado.doc || afiliado.documento || afiliado.cedula || afiliado.Cédula || afiliado.DOCUMENTO || afiliado['NRO DOCUMENTO'],
+                    primer_nom: afiliado.primer_nom || afiliado.PRIMER_NOMBRE || afiliado['PRIMER NOMBRE'],
+                    segundo_nom: afiliado.segundo_nom || afiliado.SEGUNDO_NOMBRE || afiliado['SEGUNDO NOMBRE'] || '',
+                    primer_ape: afiliado.primer_ape || afiliado.PRIMER_APELLIDO || afiliado['PRIMER APELLIDO'],
+                    segundo_ape: afiliado.segundo_ape || afiliado.SEGUNDO_APELLIDO || afiliado['SEGUNDO APELLIDO'] || '',
+                    prestador: afiliado.PRESTADOR || afiliado.prestador || afiliado.IPS
+                };
+                const nombreCompleto = `${data.primer_nom} ${data.segundo_nom} ${data.primer_ape} ${data.segundo_ape}`.replace(/\s+/g, ' ').trim();
+                resultadoDiv.innerHTML = `
+                  <div id="cardExport">
+                    <div class="result-item"><strong>Nombre Completo:</strong> <span> ${nombreCompleto}</span></div>
+                    <div class="result-item"><strong>Cédula:</strong> <span> ${data.doc}</span></div>
+                    <div class="result-item"><strong>Prestador (IPS):</strong> <span>${data.prestador || 'No asignado'}</span></div>
+                  </div>`;
+                descargarBtn.style.display = 'flex';
+            } else {
+                showNotification(`❌ Afiliado no encontrado. Puedes verificar en <a href="https://www.adres.gov.co/consulte-su-eps" target="_blank">ADRES</a>.`, 'error');
+            }
+        }
+
+        async function descargarImagenConLogo() {
+            const card = document.getElementById("cardExport");
+            if (!card) return;
+            toggleLoader(true);
+            try {
+                const logoUrl = 'https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png';
+                const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(logoUrl.replace(/^https?:\/\//, ''))}`;
+                
+                const logo = new Image();
+                logo.crossOrigin = "Anonymous";
+                logo.src = proxyUrl;
+                
+                await new Promise((resolve, reject) => {
+                    logo.onload = resolve;
+                    logo.onerror = reject;
+                });
+
+                const cardCanvas = await html2canvas(card, { 
+                    scale: 2, 
+                    useCORS: true,
+                    // 1. Forzar un fondo blanco para la captura de la tarjeta
+                    backgroundColor: '#ffffff',
+                    onclone: (doc) => {
+                        const cardClone = doc.getElementById('cardExport');
+                        // 2. Forzar opacidad 1 y quitar animación
+                        cardClone.style.animation = 'none';
+                        cardClone.style.opacity = '1';
+                    }
+                });
+          
+                const combinedCanvas = document.createElement('canvas');
+                const ctx = combinedCanvas.getContext('2d');
+                const padding = 30;
+                const logoHeight = 130;
+                const logoWidth = (logo.width / logo.height) * logoHeight;
+                combinedCanvas.width = cardCanvas.width + (padding * 2);
+                combinedCanvas.height = cardCanvas.height + logoHeight + (padding * 3);
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+                ctx.drawImage(logo, (combinedCanvas.width - logoWidth) / 2, padding, logoWidth, logoHeight);
+                ctx.drawImage(cardCanvas, padding, logoHeight + (padding * 2), cardCanvas.width, cardCanvas.height);
+
+                const link = document.createElement("a");
+                link.download = `consulta_afiliado_${cedulaInput.value.trim()}.png`;
+                link.href = combinedCanvas.toDataURL("image/png");
+                link.click();
+            } catch (err) {
+                console.error("Error al generar la imagen:", err);
+                alert("Hubo un error al generar la imagen. Revisa tu conexión a internet.");
+            } finally {
+                toggleLoader(false);
+            }
+        }
+
+        consultarBtn.addEventListener("click", buscarAfiliado);
+        cedulaInput.addEventListener("keydown", (event) => {
+            if (event.key === 'Enter' && !consultarBtn.disabled) buscarAfiliado();
+        });
+        fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
+        descargarBtn.addEventListener("click", descargarImagenConLogo);
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          fileDropArea.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); });
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+          fileDropArea.addEventListener(eventName, () => fileDropArea.classList.add('drag-over'));
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+          fileDropArea.addEventListener(eventName, () => fileDropArea.classList.remove('drag-over'));
+        });
+        fileDropArea.addEventListener('drop', (e) => {
+          handleFile(e.dataTransfer.files[0]);
+        });
+        
+        initialize();
+    });
+  </script>
+
+</body>
+</html>
