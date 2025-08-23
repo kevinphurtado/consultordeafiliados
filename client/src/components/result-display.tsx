@@ -42,6 +42,28 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
       window.print();
     }, 50);
   };
+
+  const commonExportLogic = async (element: HTMLElement) => {
+    // Guardamos las clases originales para restaurarlas después
+    const originalClasses = element.className;
+    // Eliminamos las clases de gradiente y aseguramos un fondo blanco
+    element.className = originalClasses
+      .replace('bg-gradient-to-br', '')
+      .replace('from-green-50', '')
+      .replace('to-white', '') + ' bg-white';
+
+    try {
+      const canvas = await window.html2canvas(element, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+      });
+      return canvas;
+    } finally {
+      // Restauramos las clases originales sin importar si hubo un error
+      element.className = originalClasses;
+    }
+  };
   
   const exportToPDF = async () => {
     if (!affiliate) return;
@@ -49,26 +71,14 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
     if (!resultCard) return;
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      const canvas = await commonExportLogic(resultCard);
       let jsPDFClass = window.jsPDF || (window.jspdf && window.jspdf.jsPDF);
-
       if (!jsPDFClass) {
-        alert('La librería PDF no está disponible. Por favor, recarga la página e intenta de nuevo.');
+        alert('La librería PDF no está disponible.');
         return;
       }
-
-      const canvas = await window.html2canvas(resultCard, { 
-        scale: 2,
-        useCORS: true,
-        allowTaint: true
-      });
       
-      const pdf = new jsPDFClass({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-      
+      const pdf = new jsPDFClass({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = 190;
       const pageHeight = 295;
@@ -89,7 +99,7 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
       pdf.save(`afiliado-${affiliate.DOC}.pdf`);
     } catch (error) {
       console.error('Error al generar PDF:', error);
-      alert('Error al generar el PDF. Por favor, intenta de nuevo.');
+      alert('Error al generar el PDF.');
     }
   };
 
@@ -98,23 +108,15 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
     const resultCard = document.getElementById('result-card');
     if (!resultCard) return;
 
-    const originalBackground = resultCard.style.background;
-    resultCard.style.background = '#FFFFFF';
-
     try {
-      const canvas = await window.html2canvas(resultCard, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-      });
+      const canvas = await commonExportLogic(resultCard);
       const link = document.createElement('a');
       link.download = `afiliado-${affiliate.DOC}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (error) {
       console.error('Error al generar imagen:', error);
-      alert('Hubo un error al generar la imagen. Por favor, intenta de nuevo.');
-    } finally {
-      resultCard.style.background = originalBackground;
+      alert('Hubo un error al generar la imagen.');
     }
   };
 
@@ -157,7 +159,7 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
             <i className="fas fa-user-check text-primary mr-3"></i>
             Información del Afiliado
           </h3>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 justify-end">
             <Dialog open={isPrintDialogOpen} onOpenChange={setIsPrintDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline">Imprimir Comprobante</Button>
@@ -208,24 +210,20 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
           <div className="bg-white rounded-lg p-4 border border-gray-200">
             <h4 className="font-semibold text-gray-700 mb-3 flex items-center"><i className="fas fa-birthday-cake text-primary mr-2"></i>Información Demográfica</h4>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-gray-600">Fecha Nacimiento:</span><span className="font-medium">{affiliate.FEC_NAC || 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Edad:</span><span className="font-medium">{affiliate.EDAD ? `${affiliate.EDAD} años` : 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Sexo:</span><span className="font-medium">{affiliate.SEXO || 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Teléfono:</span><span className="font-medium">{affiliate.TELEFONO || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Fecha Nacimiento:</span><span className="font-medium">{affiliate.FEC_NAC || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Edad:</span><span className="font-medium">{affiliate.EDAD ? `${affiliate.EDAD} años` : 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Sexo:</span><span className="font-medium">{affiliate.SEXO || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Teléfono:</span><span className="font-medium">{affiliate.TELEFONO || 'N/A'}</span></div>
             </div>
           </div>
           <div className="bg-white rounded-lg p-4 border border-gray-200">
             <h4 className="font-semibold text-gray-700 mb-3 flex items-center"><i className="fas fa-hospital text-primary mr-2"></i>Información de Afiliación</h4>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-gray-600">Prestador:</span><span className="font-medium">{affiliate.PRESTADOR || 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Categoría:</span><span className="font-medium">{affiliate.CATEGORIA || 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Cuota Moderadora:</span><span className="font-medium">{affiliate['CUOTA MOD'] || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Prestador:</span><span className="font-medium">{affiliate.PRESTADOR || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Categoría:</span><span className="font-medium">{affiliate.CATEGORIA || 'N/A'}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">Cuota Moderadora:</span><span className="font-medium">{affiliate['CUOTA MOD'] || 'N/A'}</span></div>
             </div>
           </div>
-        </div>
-        
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">Consulta realizada el {currentTimestamp}</p>
         </div>
       </div>
     </>

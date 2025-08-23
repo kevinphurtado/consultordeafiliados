@@ -218,6 +218,6 @@
   }
   @page {
     size: letter;
-    margin: 0.5cm; /* Margen reducido */
+    margin: 1cm; /* 1cm arriba/abajo, 1.5cm a los lados */
   }
 }

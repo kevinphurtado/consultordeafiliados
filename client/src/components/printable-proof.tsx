@@ -18,65 +18,38 @@ export function PrintableProof({ affiliate, ingresoDate, egresoDate, diagnostico
 
   const styles = {
     page: {
-      backgroundColor: 'white',
-      color: 'black',
-      fontFamily: 'Arial, sans-serif',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '27.95cm', // Alto de hoja carta
+      backgroundColor: 'white', color: 'black', fontFamily: 'Arial, sans-serif',
+      display: 'flex', flexDirection: 'column', height: '26.5cm',
     } as React.CSSProperties,
     header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
     } as React.CSSProperties,
     title: {
-      textAlign: 'center' as const,
-      fontWeight: 'bold' as const,
-      fontSize: '14px',
-      margin: '1.5rem 0',
-      color: '#026937',
+      textAlign: 'center' as const, fontWeight: 'bold' as const, fontSize: '14px',
+      margin: '1rem 0', color: '#026937',
     },
-    p: {
-      fontSize: '11px',
-      lineHeight: '1.6',
-      marginBottom: '1rem',
-    },
+    p: { fontSize: '11px', lineHeight: '1.5', marginBottom: '1rem' },
     fieldRow: {
-      display: 'flex',
-      alignItems: 'flex-end',
-      marginBottom: '0.5rem',
-      maxWidth: '67%', // Acorta la longitud de la línea
+      display: 'flex', alignItems: 'flex-end', marginBottom: '0.5rem', maxWidth: '85%',
     },
     fieldLabel: {
-      width: '220px',
-      flexShrink: 0,
-      fontWeight: 'bold' as const,
-      fontSize: '11px',
+      width: '220px', flexShrink: 0, fontWeight: 'bold' as const, fontSize: '11px',
     },
     fieldValue: {
-      borderBottom: '1px solid black',
-      width: '100%',
-      paddingLeft: '8px',
-      fontSize: '11px',
-      minHeight: '20px'
+      borderBottom: '1px solid black', width: '100%', paddingLeft: '8px',
+      fontSize: '11px', minHeight: '20px',
     },
-    signatureBox: {
-        borderBottom: '1px solid black',
-        height: '40px',
-        marginBottom: '4px',
+    signatureBlock: {
+      marginTop: '2.5rem', fontSize: '11px',
+    },
+    signatureLine: {
+      borderBottom: '1px solid black', height: '25px', marginBottom: '4px', maxWidth: '320px'
     },
     footer: {
-  position: 'absolute',  // Lo hacemos absoluto para controlar su posición
-  bottom: '60px',        // Distancia desde el borde inferior de la página
-  left: '1.4cm',         // Respetamos el margen izquierdo
-  right: '1.4cm',        // Respetamos el margen derecho
-  textAlign: 'center' as const,
-  fontSize: '8px',
-  lineHeight: '1.1',
-  borderTop: '1px solid black',
-  paddingTop: '8px',
-},
+      position: 'absolute', bottom: '40px', left: '1.5cm', right: '1.5cm',
+      textAlign: 'center' as const, fontSize: '8px', lineHeight: '1.2',
+      borderTop: '1px solid black', paddingTop: '8px',
+    },
   };
 
   return (
@@ -84,8 +57,8 @@ export function PrintableProof({ affiliate, ingresoDate, egresoDate, diagnostico
       <header style={styles.header}>
         <img src="https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png" alt="Logo COMFACHOCÓ" style={{ width: '130px' }} />
         <div style={{ textAlign: 'right', fontSize: '9px', lineHeight: '1.1' }}>
-          Caja de Compensación Familiar del Chocó,COMFACHOCÓ<br/>
-          NIT: 891 600 091 – 8
+          Caja de Compensación Familiar del Chocó, COMFACHOCÓ<br/>
+          NIT: 891 600 091–8
         </div>
       </header>
 
@@ -122,42 +95,41 @@ export function PrintableProof({ affiliate, ingresoDate, egresoDate, diagnostico
                 <td></td>
             </tr>
             <tr style={{ height: '0.5rem' }}><td colSpan={3}></td></tr>
-            <tr style={{...styles.fieldRow, maxWidth: '100%'}}>
-                <td style={{ fontWeight: 'bold', verticalAlign: 'bottom', paddingBottom: '4px', width: '220px', flexShrink: 0 }}>Diagnóstico:</td>
-                <td colSpan={2} style={{ borderBottom: '1px solid black', height: '24px', paddingLeft: '8px', width: '100%' }}>{diagnostico}</td>
+            
+            {/* === LÍNEA DE DIAGNÓSTICO CORREGIDA === */}
+            <tr>
+                <td style={{ fontWeight: 'bold', verticalAlign: 'bottom', paddingBottom: '4px', width: '220px' }}>Diagnóstico:</td>
+                <td style={{ borderBottom: '1px solid black', height: '24px', paddingLeft: '8px', width: '100px' }}> 
+                  {diagnostico}
+                </td>
+                <td></td>
             </tr>
+
             </tbody>
         </table>
         
-        <p style={{ fontSize: '11px', fontWeight: 'bold', margin: '1.5rem 0' }}>Empresa Aseguradora: COMFACHOCÓ EPS. S</p>
-        <p style={{ fontSize: '12px', fontStyle: 'italic' }}>
+        <p style={{ fontSize: '11px', fontWeight: 'bold', margin: '1.5rem 0' }}>Empresa Aseguradora: COMFACHOCÓ EPS S</p>
+        <p style={{ fontSize: '11px', fontStyle: 'italic' }}>
           Así se da cumplimiento al trámite definido en el Decreto 4747 de 2007 y a la reglamentación definida en la Resolución 3047 de 2008.
         </p>
         
-        {/* Sección de Firmas corregida */}
-        <div style={{ marginTop: '1.5rem', fontSize: '11px' }}>
-          <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.3rem' }}>
-            <div style={{ width: '50%' }}>
-              <div style={styles.signatureBox}></div>
+        <div style={styles.signatureBlock}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={styles.signatureLine}></div>
               <strong>Firma del paciente o del responsable:</strong>
-              <p style={{ margin: '3px 0 0 0' }}>No. de identificación:</p>
+              <p style={{ margin: '4px 0 0 0' }}>No. de identificación:</p>
             </div>
-            <div style={{ width: '50%' }}></div>
-          </div>
-          <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.5rem' }}>
-            <div style={{ width: '50%' }}>
-              <div style={styles.signatureBox}></div>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={styles.signatureLine}></div>
               <strong>Parentesco:</strong>
             </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0rem' }}>
-            <div style={{ width: '50%' }}>
-              <div style={styles.signatureBox}></div>
+            <div>
+              <div style={styles.signatureLine}></div>
               <strong>Facturación:</strong>
             </div>
-          </div>
         </div>
       </main>
+
       <footer style={styles.footer}>
         <strong>Calle 23 No. 4-31 Calle las Águilas. PBX:</strong> (094) 670 8747. <strong>Comfachocó IPS:</strong> 671 1313, <strong>Comfachocó EPS-s:</strong> 672 3536.<br/>
         <strong>Centro Vacacional:</strong> 671 3326. <strong>Complejo Educativo Comfachocó</strong>: 6719181. <strong>Centro Hospital Día:</strong> 671 0148<br/>

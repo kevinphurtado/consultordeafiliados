@@ -261,7 +261,7 @@ export default function Home() {
               </p>
               <h4 className="font-semibold">Impresión de comprobante</h4>
               <p className="text-sm text-muted-foreground">
-                Hemos agregado la opción de imprimir el comprobante de prestación de servicio,
+                Ahora puedes imprimir el comprobante de prestación de servicio,
                 solo tienes que configurar la fecha y el diágnostico.
               </p>
             </div>
