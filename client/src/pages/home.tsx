@@ -102,8 +102,8 @@ export default function Home() {
           data-testid="header"
         >
           <img 
-            src="https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png" 
-            alt="Logo Comfachocó EPS" 
+            src="https://i.imgur.com/655zAyH.png" 
+            alt="Logo" 
             className="max-w-48 mx-auto mb-4"
             data-testid="img-logo"
           />
@@ -111,7 +111,7 @@ export default function Home() {
             CONSULTOR DE AFILIADOS
           </h1>
           <p className="text-text-color">
-            Sistema de consulta de base de datos de afiliados
+            Sistema de consulta de base de datos de afiliados en Excel
           </p>
         </header>
 

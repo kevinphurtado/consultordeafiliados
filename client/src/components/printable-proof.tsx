@@ -46,7 +46,7 @@ export function PrintableProof({ affiliate, ingresoDate, egresoDate, diagnostico
       borderBottom: '1px solid black', height: '25px', marginBottom: '4px', maxWidth: '320px'
     },
     footer: {
-      position: 'absolute', bottom: '40px', left: '1.5cm', right: '1.5cm',
+      position: 'absolute', bottom: '43px', left: '1.6cm', right: '1.6cm',
       textAlign: 'center' as const, fontSize: '8px', lineHeight: '1.2',
       borderTop: '1px solid black', paddingTop: '8px',
     },
@@ -57,7 +57,7 @@ export function PrintableProof({ affiliate, ingresoDate, egresoDate, diagnostico
       <header style={styles.header}>
         <img src="https://comfachoco.com/comfachocoepsweb/public/portalWebEps/img/core-img/logotipoo153.png" alt="Logo COMFACHOCÓ" style={{ width: '130px' }} />
         <div style={{ textAlign: 'right', fontSize: '9px', lineHeight: '1.1' }}>
-          Caja de Compensación Familiar del Chocó, COMFACHOCÓ<br/>
+          Caja de Compensación Familiar del Chocó, Comfachoco<br/>
           NIT: 891 600 091–8
         </div>
       </header>

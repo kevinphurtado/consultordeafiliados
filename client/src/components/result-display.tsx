@@ -42,25 +42,30 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
       window.print();
     }, 50);
   };
-
+  
+  /**
+   * Lógica de exportación definitiva:
+   * 1. Guarda las clases CSS originales del elemento.
+   * 2. Elimina las clases de gradiente y añade 'bg-white' para un fondo sólido.
+   * 3. Captura el canvas.
+   * 4. En un bloque 'finally', restaura las clases originales para que la UI no cambie.
+   */
   const commonExportLogic = async (element: HTMLElement) => {
-    // Guardamos las clases originales para restaurarlas después
     const originalClasses = element.className;
-    // Eliminamos las clases de gradiente y aseguramos un fondo blanco
     element.className = originalClasses
       .replace('bg-gradient-to-br', '')
       .replace('from-green-50', '')
-      .replace('to-white', '') + ' bg-white';
-
+      .replace('to-white', '')
+      .trim() + ' bg-white';
+  
     try {
       const canvas = await window.html2canvas(element, {
         scale: 2,
-        backgroundColor: '#ffffff',
         useCORS: true,
       });
       return canvas;
     } finally {
-      // Restauramos las clases originales sin importar si hubo un error
+      // Se asegura de que las clases originales siempre se restauren
       element.className = originalClasses;
     }
   };
@@ -203,7 +208,12 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-gray-600">Tipo Doc:</span><span className="font-medium">{affiliate.TIP_DOC || 'N/A'}</span></div>
               <div className="flex justify-between"><span className="text-gray-600">Documento:</span><span className="font-medium">{affiliate.DOC || 'N/A'}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Nombres:</span><span className="font-medium">{`${affiliate.PRIMER_NOM || ''} ${affiliate.SEGUNDO_NOM || ''}`.trim() || 'N/A'}</span></div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Nombres:</span>
+                <span className="font-bold text-success-color"> 
+                  {`${affiliate.PRIMER_NOM || ''} ${affiliate.SEGUNDO_NOM || ''}`.trim() || 'N/A'}
+                </span>
+              </div>
               <div className="flex justify-between"><span className="text-gray-600">Apellidos:</span><span className="font-medium">{`${affiliate.PRIMER_APE || ''} ${affiliate.SEGUNDO_APE || ''}`.trim() || 'N/A'}</span></div>
             </div>
           </div>
@@ -219,7 +229,12 @@ export function ResultDisplay({ affiliate, notFound, onClearSearch }: ResultDisp
           <div className="bg-white rounded-lg p-4 border border-gray-200">
             <h4 className="font-semibold text-gray-700 mb-3 flex items-center"><i className="fas fa-hospital text-primary mr-2"></i>Información de Afiliación</h4>
             <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-gray-600">Prestador:</span><span className="font-medium">{affiliate.PRESTADOR || 'N/A'}</span></div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Prestador:</span>
+                  <span className="font-bold text-success-color">
+                    {affiliate.PRESTADOR || 'N/A'}
+                  </span>
+                </div>
                 <div className="flex justify-between"><span className="text-gray-600">Categoría:</span><span className="font-medium">{affiliate.CATEGORIA || 'N/A'}</span></div>
                 <div className="flex justify-between"><span className="text-gray-600">Cuota Moderadora:</span><span className="font-medium">{affiliate['CUOTA MOD'] || 'N/A'}</span></div>
             </div>

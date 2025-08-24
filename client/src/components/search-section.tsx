@@ -17,6 +17,14 @@ export function SearchSection({ enabled, onSearch }: SearchSectionProps) {
       handleSearch();
     }
   };
+  
+  // Función para permitir solo números
+  const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Reemplaza cualquier caracter que no sea un número con una cadena vacía
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setDocumento(numericValue);
+  };
 
   return (
     <div 
@@ -35,9 +43,11 @@ export function SearchSection({ enabled, onSearch }: SearchSectionProps) {
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
           <input 
-            type="text" 
+            type="tel" // Cambiado a "tel" para mejor compatibilidad con teclados numéricos
+            inputMode="numeric" // Ayuda a forzar el teclado numérico en móviles
+            pattern="[0-9]*"
             value={documento}
-            onChange={(e) => setDocumento(e.target.value)}
+            onChange={handleNumericInput} // Usamos la nueva función de filtrado
             placeholder="Digite el número de documento del afiliado"
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-lg"
             onKeyPress={handleKeyPress}
