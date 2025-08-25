@@ -102,7 +102,7 @@ export default function Home() {
           data-testid="header"
         >
           <img 
-            src="https://i.imgur.com/655zAyH.png" 
+            src="https://i.imgur.com/bwIgn71.png" 
             alt="Logo" 
             className="max-w-48 mx-auto mb-4"
             data-testid="img-logo"
