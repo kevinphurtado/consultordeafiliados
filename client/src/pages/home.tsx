@@ -223,7 +223,7 @@ export default function Home() {
           data-testid="footer"
         >
           <div className="text-xs text-gray-500">
-            Creado por <strong className="text-gray-700">Kevin Hurtado</strong> | 
+            © 2025 Desarrollado por el equipo de <a href="https://chococreativo.com.co/proyectos" target="_blank">Chocó Creativo 🖤</a> | 
             <button
               onClick={() => setIsChangelogOpen(true)}
               className="text-primary hover:underline font-medium ml-1"
